@@ -1,4 +1,4 @@
-module github.com/whoisix/pochama
+module github.com/icpd/pochama
 
 go 1.18
 
