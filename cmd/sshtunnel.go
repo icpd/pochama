@@ -13,7 +13,7 @@ import (
 
 var sshtunnelCmd = &cobra.Command{
 	Use:   "sshtunnel",
-	Short: "one key starts multiple ssh tunnels",
+	Short: "One key starts multiple ssh tunnels",
 	Run:   cmd,
 	PreRun: func(cmd *cobra.Command, args []string) {
 		viper.SetConfigName("sshtunnel")

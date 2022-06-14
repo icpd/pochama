@@ -9,7 +9,7 @@ import (
 
 var rootCmd = &cobra.Command{
 	Use:   "pochama",
-	Short: "Pochama is a happy penguin prince",
+	Short: "Pochama is a packaging tool for some tedious operations.",
 }
 
 func Execute() {
