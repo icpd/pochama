@@ -4,9 +4,9 @@ import (
 	"bytes"
 	"io/ioutil"
 
+	"github.com/icpd/pochama/sshtunnel"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"github.com/whoisix/pochama/sshtunnel"
 	"golang.org/x/crypto/ssh"
 	"gopkg.in/yaml.v2"
 )

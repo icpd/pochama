@@ -2,7 +2,7 @@ NAME=pochama
 BINDIR=bin
 VERSION=$(shell git describe --tags || echo "unknown version")
 BUILDTIME=$(shell date -u)
-GOBUILD=CGO_ENABLED=0 go build -trimpath -ldflags '-X "github.com/whoisix/pochama/cmd.Version=$(VERSION)"'
+GOBUILD=CGO_ENABLED=0 go build -trimpath -ldflags '-X "github.com/icpd/pochama/cmd.Version=$(VERSION)"'
 
 PLATFORM_LIST = \
 	darwin-amd64 \

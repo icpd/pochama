@@ -7,8 +7,8 @@ pochama is a packaging tool for some tedious operations.
 Pochama can't walk without falling down，but strong self-esteem allows him to hold his chest up in any situation.
 
 ## Installation
-1. download the latest release from [Release](https://github.com/whoisix/pochama/releases)
+1. download the latest release from [Release](https://github.com/icpd/pochama/releases)
 2. clone the repository, and `go install`
 
 ## Getting Started
-[GitHub Wiki](https://github.com/whoisix/pochama/wiki)
+[GitHub Wiki](https://github.com/icpd/pochama/wiki)

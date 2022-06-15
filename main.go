@@ -1,6 +1,6 @@
 package main
 
-import "github.com/whoisix/pochama/cmd"
+import "github.com/icpd/pochama/cmd"
 
 func main() {
 	cmd.Execute()
