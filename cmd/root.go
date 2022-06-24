@@ -1,10 +1,12 @@
 package cmd
 
 import (
+	"bytes"
 	"os"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"gopkg.in/yaml.v2"
 )
 
 var rootCmd = &cobra.Command{
@@ -24,7 +26,7 @@ var initCfg bool
 
 func init() {
 	rootCmd.PersistentFlags().StringVarP(&cfgDir, "dir", "d", "", "config file directory (default is $HOME/.config/pochama)")
-	rootCmd.PersistentFlags().BoolVar(&initCfg, "initcfg", false, "create default config file only if the file does not exist")
+	rootCmd.PersistentFlags().BoolVar(&initCfg, "initconfig", false, "create default config file only if the file does not exist")
 
 	initCfgDir()
 }
@@ -47,4 +49,21 @@ func initCfgDir() {
 
 	viper.AddConfigPath(cfgDir)
 	viper.SetConfigType("yaml")
+}
+
+func createCfgIFNotExists(cfg any) error {
+	yamlCfg, err := yaml.Marshal(cfg)
+	if err != nil {
+		return err
+	}
+
+	err = viper.ReadConfig(bytes.NewBuffer(yamlCfg))
+	if err != nil {
+		return err
+	}
+	err = viper.SafeWriteConfig()
+	if err != nil {
+		return err
+	}
+	return nil
 }

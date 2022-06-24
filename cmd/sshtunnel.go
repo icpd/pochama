@@ -1,20 +1,18 @@
 package cmd
 
 import (
-	"bytes"
 	"io/ioutil"
 
 	"github.com/icpd/pochama/sshtunnel"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"golang.org/x/crypto/ssh"
-	"gopkg.in/yaml.v2"
 )
 
 var sshtunnelCmd = &cobra.Command{
 	Use:   "sshtunnel",
 	Short: "One key starts multiple ssh tunnels",
-	Run:   cmd,
+	Run:   tunnel,
 	PreRun: func(cmd *cobra.Command, args []string) {
 		viper.SetConfigName("sshtunnel")
 	},
@@ -41,9 +39,14 @@ type TunnelConfig struct {
 	Tunnels    []Tunnel `yaml:"tunnels"`
 }
 
-func cmd(cmd *cobra.Command, args []string) {
+func tunnel(cmd *cobra.Command, args []string) {
 	if initCfg {
-		err := createSSHTunnelCfgIFNotExists()
+		emptyCfg := &TunnelConfig{
+			Tunnels: []Tunnel{
+				{},
+			},
+		}
+		err := createCfgIFNotExists(emptyCfg)
 		cobra.CheckErr(err)
 		return
 	}
@@ -112,28 +115,6 @@ func (t Tunnel) getAuth(defaultAuth ssh.AuthMethod) ssh.AuthMethod {
 	}
 
 	return auth
-}
-
-func createSSHTunnelCfgIFNotExists() error {
-	emptyCfg := &TunnelConfig{
-		Tunnels: []Tunnel{
-			{},
-		},
-	}
-	yamlCfg, err := yaml.Marshal(emptyCfg)
-	if err != nil {
-		return err
-	}
-
-	err = viper.ReadConfig(bytes.NewBuffer(yamlCfg))
-	if err != nil {
-		return err
-	}
-	err = viper.SafeWriteConfig()
-	if err != nil {
-		return err
-	}
-	return nil
 }
 
 func (t *TunnelConfig) loadConfig() {
