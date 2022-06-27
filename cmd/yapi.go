@@ -73,6 +73,8 @@ func yapi(cmd *cobra.Command, args []string) {
 		file, err := ioutil.ReadFile("./docs/swagger.json")
 		cobra.CheckErr(err)
 
+		cmd.Println("upload merge: ", yapiMerge)
+
 		resp, err := resty.New().SetBaseURL(config.Host).R().
 			SetBody(map[string]any{
 				"type":  "swagger",
