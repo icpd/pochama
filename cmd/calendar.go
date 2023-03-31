@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"runtime"
 	"strings"
 	"time"
 
@@ -44,6 +45,12 @@ type CalendarItem struct {
 const UTCTime20010101 = 978307200
 
 func calendar(cmd *cobra.Command, args []string) {
+	switch runtime.GOOS {
+	case "darwin":
+	default:
+		log.Fatal("只支持 macOS 系统")
+	}
+
 	db, err := gorm.Open(sqlite.Open(dbPath))
 	if err != nil {
 		cobra.CheckErr(err)
