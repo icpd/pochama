@@ -23,14 +23,16 @@ var calendarCmd = &cobra.Command{
 }
 
 var (
-	dbPath    string
-	startDate string
+	dbPath      string
+	startDate   string
+	withRestDay bool
 )
 
 func init() {
 	homeDir, _ := os.UserHomeDir()
 	calendarCmd.Flags().StringVarP(&dbPath, "db", "", fmt.Sprintf("%s/Library/Calendars/Calendar.sqlitedb", homeDir), "SQLite数据库文件路径")
 	calendarCmd.Flags().StringVarP(&startDate, "start", "s", now.BeginningOfMonth().Format("2006-01-02"), "开始时间")
+	calendarCmd.Flags().BoolVarP(&withRestDay, "rest", "r", false, "统计休息日加班")
 
 	rootCmd.AddCommand(calendarCmd)
 }
@@ -62,10 +64,15 @@ func calendar(cmd *cobra.Command, args []string) {
 	}
 	startCalTime := startTime.Add(-UTCTime20010101 * time.Second)
 
+	keyword := "summary like '加班%小时'"
+	if withRestDay {
+		keyword = "summary like '加班%天'"
+	}
+
 	var items []CalendarItem
 	err = db.Table("CalendarItem").
 		Select(fmt.Sprintf("summary, %s,  %s", toUnixTimeColumn("start_date"), toUnixTimeColumn("end_date"))).
-		Where("summary like '加班%小时'").
+		Where(keyword).
 		Where("start_date >= ?", startCalTime.Unix()).
 		Order("start_date").
 		Find(&items).Error
