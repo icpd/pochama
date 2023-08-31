@@ -43,8 +43,8 @@ type CalendarItem struct {
 	EndTDate  string
 }
 
-// UTCTime20010101 978307200 = 2001-01-01 00:00:00 UTC
-const UTCTime20010101 = 978307200
+// NSTimeIntervalSince1970 978307200 = 2001-01-01 00:00:00 UTC
+const NSTimeIntervalSince1970 = 978307200
 
 func calendar(cmd *cobra.Command, args []string) {
 	switch runtime.GOOS {
@@ -62,7 +62,7 @@ func calendar(cmd *cobra.Command, args []string) {
 	if err != nil {
 		cobra.CheckErr(err)
 	}
-	startCalTime := startTime.Add(-UTCTime20010101 * time.Second)
+	startCalTime := startTime.Add(-NSTimeIntervalSince1970 * time.Second)
 
 	keyword := "summary like '加班%小时'"
 	if withRestDay {
@@ -107,7 +107,7 @@ func calendar(cmd *cobra.Command, args []string) {
 }
 
 func toUnixTimeColumn(columnName string) string {
-	return fmt.Sprintf("datetime(%s + %d, 'unixepoch', 'localtime') as %[1]s", columnName, UTCTime20010101)
+	return fmt.Sprintf("datetime(%s + %d, 'unixepoch', 'localtime') as %[1]s", columnName, NSTimeIntervalSince1970)
 }
 
 func fmtSummary(v CalendarItem) string {
