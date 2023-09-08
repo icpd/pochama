@@ -28,6 +28,25 @@ var (
 	withRestDay bool
 )
 
+type constant struct {
+	sqlKeyword  string
+	countTrim   string
+	summaryTrim string
+}
+
+var constants = [2]constant{
+	{
+		sqlKeyword:  "summary like '加班%小时'",
+		countTrim:   "加班天",
+		summaryTrim: "加班",
+	},
+	{
+		sqlKeyword:  "summary like '加班%天'",
+		countTrim:   "加班小时",
+		summaryTrim: "加班",
+	},
+}
+
 func init() {
 	homeDir, _ := os.UserHomeDir()
 	calendarCmd.Flags().StringVarP(&dbPath, "db", "", fmt.Sprintf("%s/Library/Calendars/Calendar.sqlitedb", homeDir), "SQLite数据库文件路径")
@@ -64,15 +83,15 @@ func calendar(cmd *cobra.Command, args []string) {
 	}
 	startCalTime := startTime.Add(-NSTimeIntervalSince1970 * time.Second)
 
-	keyword := "summary like '加班%小时'"
+	keywords := constants[0]
 	if withRestDay {
-		keyword = "summary like '加班%天'"
+		keywords = constants[1]
 	}
 
 	var items []CalendarItem
 	err = db.Table("CalendarItem").
 		Select(fmt.Sprintf("summary, %s,  %s", toUnixTimeColumn("start_date"), toUnixTimeColumn("end_date"))).
-		Where(keyword).
+		Where(keywords.sqlKeyword).
 		Where("start_date >= ?", startCalTime.Unix()).
 		Order("start_date").
 		Find(&items).Error
@@ -92,10 +111,11 @@ func calendar(cmd *cobra.Command, args []string) {
 
 		data = append(data, []string{
 			fmtDate(t),
-			fmtSummary(v)},
+			strings.Trim(v.Summary, keywords.summaryTrim),
+		},
 		)
 
-		count += cast.ToInt(strings.Trim(v.Summary, "加班小时"))
+		count += cast.ToInt(strings.Trim(v.Summary, keywords.countTrim))
 	}
 
 	table := tablewriter.NewWriter(os.Stdout)
@@ -108,10 +128,6 @@ func calendar(cmd *cobra.Command, args []string) {
 
 func toUnixTimeColumn(columnName string) string {
 	return fmt.Sprintf("datetime(%s + %d, 'unixepoch', 'localtime') as %[1]s", columnName, NSTimeIntervalSince1970)
-}
-
-func fmtSummary(v CalendarItem) string {
-	return strings.Trim(v.Summary, "加班")
 }
 
 func fmtDate(t time.Time) string {
