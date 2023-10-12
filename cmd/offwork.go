@@ -28,7 +28,7 @@ var workTime = &cobra.Command{
 		stdOffWorkTime := onWorkTime.Time().Add(9 * time.Hour)
 		afterOneHourOffWork := stdOffWorkTime.Add(dinnerTime).Add(1 * time.Hour)
 		afterTwoHourOffWork := stdOffWorkTime.Add(dinnerTime).Add(2 * time.Hour)
-		fmt.Printf("正点下班时间: %s\n加班1小时下班时间：%s\n加班2小时下班时间：%s\n",
+		fmt.Printf("正点下班时间: %s\n加班1小时时间：%s\n加班2小时时间：%s\n",
 			stdOffWorkTime.Format("15:04"),
 			afterOneHourOffWork.Format("15:04"),
 			afterTwoHourOffWork.Format("15:04"))
