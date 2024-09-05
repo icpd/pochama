@@ -1,6 +1,6 @@
 # pochama
 
-pochama是开发时一些繁琐操作的包装工具。  
+pochama 是开发时一些繁琐操作的包装工具。  
 pochama is a packaging tool for some tedious operations.
 
 波加曼：走路时总会跌倒，然而强烈的自尊心让它在任何情况下都能挺起胸膛。  
